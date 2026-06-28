@@ -1,0 +1,39 @@
+# Virtual Environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Environment variables
+.env
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Model checkpoints
+*.pth
+*.pt
+
+
+# Dataset cache
+data/cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Runtime uploads
+data/uploads/
+
+# Local test images
+data/sample_images/*.jpg
+data/sample_images/*.jpeg
+data/sample_images/*.jfif
+data/sample_images/*.png
+

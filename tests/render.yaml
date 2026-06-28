@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: visionserve
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile

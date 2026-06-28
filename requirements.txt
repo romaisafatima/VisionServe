@@ -1,0 +1,10 @@
+opencv-python
+onnxruntime
+torch
+torchvision
+fastapi
+uvicorn
+python-multipart
+pytest
+openai
+python-dotenv

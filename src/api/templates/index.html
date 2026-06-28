@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>VisionServe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle at top, #1e293b, #020617);
+            color: #e5e7eb;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 48px 20px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            font-size: 56px;
+            margin: 8px 0;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #94a3b8;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .features {
+            margin-top: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 34px;
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #1e293b;
+            border-radius: 22px;
+            padding: 26px;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+        }
+
+        .upload-box {
+            border: 2px dashed #475569;
+            border-radius: 18px;
+            padding: 28px;
+            text-align: center;
+            background: #020617;
+        }
+
+        input[type="file"] {
+            margin-top: 18px;
+            color: #cbd5e1;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            padding: 15px 22px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover { opacity: 0.92; }
+
+        img {
+            width: 100%;
+            max-height: 320px;
+            object-fit: contain;
+            border-radius: 16px;
+            margin-top: 18px;
+            background: #020617;
+        }
+
+        .hidden { display: none; }
+
+        .score {
+            font-size: 54px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .quality-pill {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .good { background: rgba(34,197,94,0.18); color: #86efac; }
+        .fair { background: rgba(234,179,8,0.18); color: #fde68a; }
+        .poor { background: rgba(239,68,68,0.18); color: #fca5a5; }
+
+        .muted { color: #94a3b8; }
+
+        .section { margin-top: 22px; }
+
+        .section h3 {
+            color: #93c5fd;
+            margin-bottom: 10px;
+        }
+
+        ul { padding-left: 20px; }
+
+        .metric {
+            margin-bottom: 14px;
+        }
+
+        .metric-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .bar {
+            height: 8px;
+            background: #1e293b;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            width: 0%;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #64748b;
+        }
+
+        @media (max-width: 800px) {
+            h1 { font-size: 42px; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="hero">
+            <div class="badge">Computer Vision Quality Analysis</div>
+            <h1>VisionServe</h1>
+            <p class="subtitle">
+                Upload an image and get a professional quality report covering sharpness,
+                noise, exposure, contrast, color, saturation, and resolution.
+            </p>
+
+            <div class="features">
+                <span class="chip">Blur Detection</span>
+                <span class="chip">Noise Analysis</span>
+                <span class="chip">Exposure</span>
+                <span class="chip">Contrast</span>
+                <span class="chip">Colorfulness</span>
+                <span class="chip">Resolution</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Upload Image</h2>
+                <p class="muted">Choose a JPG, PNG, WEBP, BMP, or TIFF image.</p>
+
+                <div class="upload-box">
+                    <p>Drop your image here or choose a file</p>
+                    <input type="file" id="imageInput" accept="image/*" onchange="previewImage()">
+                    <img id="preview" class="hidden">
+                </div>
+
+                <button onclick="analyzeImage()">Analyze Image</button>
+                <p id="loading" class="muted hidden">Analyzing image...</p>
+            </div>
+
+            <div id="resultCard" class="card hidden">
+                <h2>Quality Report</h2>
+
+                <div class="score" id="score"></div>
+                <div id="quality" class="quality-pill"></div>
+                <p id="summary" class="muted"></p>
+
+                <div class="section">
+                    <h3>Issues Found</h3>
+                    <ul id="issues"></ul>
+                </div>
+
+                <div class="section">
+                    <h3>Recommendations</h3>
+                    <ul id="recommendations"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="metricsCard" class="card hidden">
+            <h2>Technical Metrics</h2>
+            <div id="metrics"></div>
+        </div>
+
+        <div class="footer">
+            Built with FastAPI, OpenCV, NumPy, and Python.
+        </div>
+    </div>
+
+    <script>
+        function previewImage() {
+            const input = document.getElementById("imageInput");
+            const preview = document.getElementById("preview");
+
+            if (!input.files.length) return;
+
+            preview.src = URL.createObjectURL(input.files[0]);
+            preview.classList.remove("hidden");
+        }
+
+        async function analyzeImage() {
+            const input = document.getElementById("imageInput");
+            const loading = document.getElementById("loading");
+
+            if (!input.files.length) {
+                alert("Please select an image first.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", input.files[0]);
+
+            loading.classList.remove("hidden");
+
+            const response = await fetch("/analyze", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            loading.classList.add("hidden");
+
+            document.getElementById("resultCard").classList.remove("hidden");
+            document.getElementById("metricsCard").classList.remove("hidden");
+
+            document.getElementById("score").textContent = `${data.overall_score}/100`;
+
+            const quality = document.getElementById("quality");
+            quality.textContent = data.overall_quality.toUpperCase();
+            quality.className = `quality-pill ${data.overall_quality}`;
+
+            document.getElementById("summary").textContent = data.summary || "";
+
+            renderList("issues", data.issues, "No major issues detected.");
+            renderList("recommendations", data.recommendations, "No recommendations needed.");
+            renderMetrics(data.metrics);
+        }
+
+        function renderList(elementId, items, emptyMessage) {
+            const list = document.getElementById(elementId);
+            list.innerHTML = "";
+
+            if (!items || items.length === 0) {
+                const li = document.createElement("li");
+                li.textContent = emptyMessage;
+                list.appendChild(li);
+                return;
+            }
+
+            items.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item.replaceAll("_", " ");
+                list.appendChild(li);
+            });
+        }
+
+        function renderMetrics(metrics) {
+            const container = document.getElementById("metrics");
+            container.innerHTML = "";
+
+            const rows = [
+                ["Brightness", metrics.brightness, 255],
+                ["Blur Score", metrics.blur_score, 500],
+                ["Contrast", metrics.contrast, 100],
+                ["Noise", metrics.noise_score, 50],
+                ["Colorfulness", metrics.colorfulness, 100],
+                ["Edge Density", metrics.edge_density * 100, 100],
+                ["Saturation", metrics.saturation, 255],
+            ];
+
+            rows.forEach(([label, value, max]) => {
+                const percent = Math.min((value / max) * 100, 100);
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "metric";
+
+                wrapper.innerHTML = `
+                    <div class="metric-top">
+                        <span>${label}</span>
+                        <strong>${value.toFixed(2)}</strong>
+                    </div>
+                    <div class="bar">
+                        <div class="bar-fill" style="width: ${percent}%"></div>
+                    </div>
+                `;
+
+                container.appendChild(wrapper);
+            });
+
+            const resolution = document.createElement("div");
+            resolution.className = "metric-top";
+            resolution.innerHTML = `
+                <span>Resolution</span>
+                <strong>${metrics.resolution.width} × ${metrics.resolution.height}</strong>
+            `;
+            container.appendChild(resolution);
+
+            const exposure = document.createElement("div");
+            exposure.className = "metric-top";
+            exposure.innerHTML = `
+                <span>Exposure</span>
+                <strong>${metrics.exposure_status}</strong>
+            `;
+            container.appendChild(exposure);
+        }
+    </script>
+</body>
+</html>
